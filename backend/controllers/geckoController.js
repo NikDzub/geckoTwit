@@ -44,11 +44,63 @@ const getCoins = asyncHandler(async (req, res) => {
 });
 
 const getCoin = asyncHandler(async (req, res) => {
-  const coinHtml = await (
+  let coinHtml = await (
     await axios.get(
       `https://www.coingecko.com/en/coins/${req.params.id}/historical_data#panel`
     )
   ).data;
+
+  let curPrice = coinHtml.substr(
+    coinHtml.indexOf(`data-target="price.price">`),
+    coinHtml.lastIndexOf(`live-percent-change`)
+  );
+  curPrice = curPrice.split(`price.price">`)[1].split(`live-percent-change`)[0];
+  curPrice = curPrice.replace(`</span></span>`, "");
+  curPrice = curPrice.replace(`<span class="`, "");
+  curPrice = curPrice.trim();
+
+  coinHtml = coinHtml.slice(
+    coinHtml.indexOf("<tr>"),
+    coinHtml.lastIndexOf("</tr>")
+  );
+  coinHtml = coinHtml.split("<tr>");
+  coinHtml.shift();
+  coinHtml.shift();
+  coinHtml = coinHtml.map((tr) => {
+    let date = tr
+      .slice(tr.indexOf(`text-center">`), tr.indexOf("</th>"))
+      .replace(`text-center">`, "");
+
+    let mCap = tr.split(`class="text-center">`)[1].split(`</td>`)[0];
+    tr = tr.replace(`class="text-center">`, "");
+    tr = tr.replace(`</td>`, "");
+    while (mCap.includes(`\n`)) {
+      mCap = mCap.replace(`\n`, "");
+    }
+
+    let vol = tr.split(`class="text-center">`)[1].split(`</td>`)[0];
+    tr = tr.replace(`class="text-center">`, "");
+    tr = tr.replace(`</td>`, "");
+    while (vol.includes(`\n`)) {
+      vol = vol.replace(`\n`, "");
+    }
+
+    let open = tr.split(`class="text-center">`)[1].split(`</td>`)[0];
+    tr = tr.replace(`class="text-center">`, "");
+    tr = tr.replace(`</td>`, "");
+    while (open.includes(`\n`)) {
+      open = open.replace(`\n`, "");
+    }
+
+    let close = tr.split(`class="text-center">`)[1].split(`</td>`)[0];
+    tr = tr.replace(`class="text-center">`, "");
+    tr = tr.replace(`</td>`, "");
+    while (close.includes(`\n`)) {
+      close = close.replace(`\n`, "");
+    }
+
+    return { id: req.params.id, curPrice, date, mCap, vol, open, close };
+  });
   res.status(200).json({ data: coinHtml });
 });
 
