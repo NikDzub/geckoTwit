@@ -8,6 +8,7 @@ const getCoins = asyncHandler(async (req, res) => {
 
   try {
     let trendHtml = await (await axios.get(trendingURI, { headers })).data;
+
     trendHtml = trendHtml
       .slice(
         trendHtml.indexOf(`<div class="tw-flex">`),
@@ -18,6 +19,14 @@ const getCoins = asyncHandler(async (req, res) => {
     let coins = [];
 
     trendHtml.forEach((c) => {
+      let img = c.substring(
+        c.indexOf(`https://assets.coingecko.com/coins/images`),
+        c.indexOf(`class='tw-hidden`)
+      );
+      img = img.replace(`<span`, "");
+      img = img.replace(`" />`, "");
+      img = img.trim();
+
       let precentageLastDay = c.substring(
         c.indexOf(`data-show-solid-arrow="false">`) +
           `data-show-solid-arrow="false">`.length +
@@ -29,12 +38,12 @@ const getCoins = asyncHandler(async (req, res) => {
       c = c.slice(c.indexOf("coins/"), c.indexOf(`">`));
       c = c.replace("coins/", "");
 
-      let name = c;
+      let id = c;
 
-      while (name.includes(" ")) {
-        name = name.replace(" ", "-");
+      while (id.includes(" ")) {
+        id = id.replace(" ", "-");
       }
-      coins.push({ name, precentageLastDay });
+      coins.push({ id, precentageLastDay, img });
     });
     res.status(200).json(coins);
   } catch (error) {
