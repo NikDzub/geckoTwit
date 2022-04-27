@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/gecko", require("./routes/geckoRoute"));
-//app.use("/api/twitter", require("./routes/twitterRoute"));
+app.use("/api/twitter", require("./routes/twitterRoute"));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

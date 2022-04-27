@@ -19,6 +19,12 @@ const getCoins = asyncHandler(async (req, res) => {
     let coins = [];
 
     trendHtml.forEach((c) => {
+      let tag = c.substring(c.indexOf("("), c.indexOf(`src="https://`));
+      tag = tag.replace(`"`, "");
+      tag = tag.replace("(", "");
+      tag = tag.replace(")", "");
+      tag = tag.trim();
+
       let img = c.substring(
         c.indexOf(`https://assets.coingecko.com/coins/images`),
         c.indexOf(`class='tw-hidden`)
@@ -43,7 +49,7 @@ const getCoins = asyncHandler(async (req, res) => {
       while (id.includes(" ")) {
         id = id.replace(" ", "-");
       }
-      coins.push({ id, precentageLastDay, img });
+      coins.push({ id, tag, precentageLastDay, img });
     });
     res.status(200).json(coins);
   } catch (error) {
