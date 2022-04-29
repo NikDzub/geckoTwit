@@ -1,5 +1,5 @@
-const asyncHandler = require('express-async-handler');
-const axios = require('axios').default;
+const asyncHandler = require("express-async-handler");
+const axios = require("axios").default;
 
 const getTweets = asyncHandler(async (req, res) => {
   //AAAAAAAAAAAAAAAAAAAAAFPAbgEAAAAA6l98kxgJedDezQWIYCJrOr%2Bc0WE%3DgNoO87EyorRNIKYkcQo2uqkKSCuOrWw4xFHvvCwipuFpIdKdaT
@@ -7,7 +7,7 @@ const getTweets = asyncHandler(async (req, res) => {
   const query = `query="$zpay"`;
   const header = { Authorization: `Bearer ${process.env.TWTBEAR}` };
   const tweets = await axios.get(
-    `https://api.twitter.com/2/tweets/search/recent?${query}`,
+    `https://api.twitter.com/2/tweets/search/recent?max_results=100&tweet.fields=public_metrics,created_at&user.fields=entities,location&expansions=author_id&query="$zpay" -is:reply -has:mentions -is:retweet -has:links -has:media -has:images -has:hashtags`,
     {
       headers: header,
     }
