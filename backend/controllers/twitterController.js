@@ -2,7 +2,8 @@ const asyncHandler = require('express-async-handler');
 const axios = require('axios').default;
 
 const getTweets = asyncHandler(async (req, res) => {
-  //https://api.twitter.com/2/tweets/search/recent?query=%24set%20OR%20%2310set&start_time=2022-04-26T00:00:00.000Z&max_results=10&tweet.fields=text
+  //AAAAAAAAAAAAAAAAAAAAAFPAbgEAAAAA6l98kxgJedDezQWIYCJrOr%2Bc0WE%3DgNoO87EyorRNIKYkcQo2uqkKSCuOrWw4xFHvvCwipuFpIdKdaT
+
   const query = `query="$zpay"`;
   const header = { Authorization: `Bearer ${process.env.TWTBEAR}` };
   const tweets = await axios.get(
