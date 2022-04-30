@@ -12,14 +12,14 @@ export const Home = () => {
   useEffect(() => {
     (async () => {
       let popData = await axios.get(geckoURI);
-      popData = popData.data.slice(0, 5);
+      popData = popData.data.slice(0, 1);
       setCoinData(popData);
     })();
   }, []);
 
   return (
     <div className="home">
-      {coinData.length == 5
+      {coinData.length == 1
         ? coinData.map((c) => {
             return (
               <CoinContainer

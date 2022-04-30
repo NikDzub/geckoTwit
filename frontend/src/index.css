@@ -21,9 +21,12 @@ body {
   text-decoration: none;
 }
 .coinContainer {
+  padding: 50px;
+  margin-left: -20px;
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: blanchedalmond;
+  background-color: black;
 }

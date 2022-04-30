@@ -4,7 +4,7 @@ const axios = require('axios').default;
 const getTweets = asyncHandler(async (req, res) => {
   const header = { Authorization: `Bearer ${process.env.TWTBEAR}` };
   const tweets = await axios.get(
-    `https://api.twitter.com/2/tweets/search/recent?max_results=10&tweet.fields=public_metrics,created_at&user.fields=entities,location&expansions=author_id&query="$${req.params.id}" -is:reply -has:mentions -is:retweet -has:links -has:media -has:images`,
+    `https://api.twitter.com/2/tweets/search/recent?max_results=100&tweet.fields=public_metrics,created_at&user.fields=entities,location&expansions=author_id&query="$${req.params.id}" "${req.headers.name}" -top -last -is:reply -is:retweet`,
     {
       headers: header,
     }
