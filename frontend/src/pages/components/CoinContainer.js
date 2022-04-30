@@ -21,6 +21,12 @@ const CoinContainer = (props) => {
       });
       days = Array.from(days).reverse();
 
+      let coinData = await (await axios.get(geckoURI)).data.data;
+      console.log(coinData);
+      coinData.map((day) => {
+        console.log(new Date(day.date).ge);
+      });
+
       days.forEach((d) => {
         let score = 0;
         twitData.data.comms.map((c) => {
@@ -34,13 +40,6 @@ const CoinContainer = (props) => {
           return [...prev, { name: d, uv: score, pv: '30' }];
         });
       });
-
-      let coinData = await (await axios.get(geckoURI)).data;
-      //console.log(coinData);
-
-      setTimeout(() => {
-        console.log(tData);
-      }, 5000);
     })();
   }, []);
 

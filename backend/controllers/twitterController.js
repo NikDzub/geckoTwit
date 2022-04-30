@@ -1,54 +1,57 @@
 const asyncHandler = require('express-async-handler');
-const axios = require('axios').default;
+const Twitter = require('twitter');
+
+const client = new Twitter({
+  consumer_key: process.env.CK,
+  consumer_secret: process.env.CSK,
+  access_token_key: process.env.ATK,
+  access_token_secret: process.env.ATS,
+});
 
 const getTweets = asyncHandler(async (req, res) => {
-  const header = { Authorization: `Bearer ${process.env.TWTBEAR}` };
-  const tweets = await axios.get(
-    `https://api.twitter.com/2/tweets/search/recent?max_results=100&tweet.fields=public_metrics,created_at&user.fields=entities,location&expansions=author_id&query="$${req.params.id}" "${req.headers.name}" -top -last -is:reply -is:retweet`,
-    {
-      headers: header,
-    }
-  );
-  if (!tweets.data.data) {
-    res.status(404).json({ message: 'no tweets found' });
-    return;
-  }
-  let data = {
-    lastDate: new Date(
-      tweets.data.data[tweets.data.data.length - 1].created_at
-    ),
-    users: [],
-    comms: [],
-  };
-
-  tweets.data.data.map((t) => {
-    const com = {
-      ca: new Date(t.created_at),
-      txt: t.text,
-      rep: t.public_metrics.reply_count,
-      like: t.public_metrics.like_count,
-      ret: t.public_metrics.retweet_count,
-    };
-    data.comms.push(com);
+  const past7Days = [...Array(7).keys()].map((index) => {
+    let date = new Date();
+    date.setDate(date.getDate() - index);
+    date = date.toISOString();
+    return date.substring(0, date.indexOf('T'));
   });
 
-  tweets.data.includes.users.map((u) => {
-    const user = {
-      username: u.username,
-      cashTs: [],
-    };
-    if (
-      u.entities &&
-      u.entities.description &&
-      u.entities.description &&
-      u.entities.description.cashtags
-    ) {
-      user.cashTs = u.entities.description.cashtags;
-    }
-    data.users.push(user);
-  });
+  let daysData = [];
 
-  res.status(200).json(data);
+  past7Days.map((d) => {
+    const until = past7Days[past7Days.indexOf(d) - 1];
+    const since = d;
+    let params = {
+      q: `${req.params.id} "$${req.params.id}" (${req.params.id}) -RSI -top -popular -recent -trending -movers min_replies:2 min_faves:2 min_retweets:2 until:${until} since:${since} -filter:replies`,
+    };
+    if (until == undefined) {
+      params = {
+        q: `${req.params.id} "$${req.params.id}" (${req.params.id}) -RSI -top -popular -recent -trending -movers min_replies:2 min_faves:2 min_retweets:2 since:${since} -filter:replies`,
+      };
+    }
+    client.get('search/tweets', params, function (error, tweets, response) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        let date = d;
+        let totLikes = 0;
+        let totRet = 0;
+        let totUsersF = 0;
+
+        tweets.statuses.map((s) => {
+          totRet += s.retweet_count;
+          totLikes += s.favorite_count;
+          totUsersF += s.user.followers_count;
+        });
+        daysData.push({ date, totLikes, totRet, totUsersF });
+
+        if (daysData.length == 7) {
+          res.status(200).json([...daysData]);
+        }
+      }
+    });
+  });
 });
 
 module.exports = { getTweets };
