@@ -12,33 +12,33 @@ const CoinContainer = (props) => {
 
   useEffect(() => {
     (async () => {
-      let days = new Set();
-      let twitData = await axios.get(twitURI, { headers: { name: props.id } });
-      twitData.data.comms.map((c) => {
-        const date =
-          new Date(c.ca).getUTCDate() + '/' + (new Date(c.ca).getMonth() + 1);
-        days.add(date);
+      let twitData = await axios.get(twitURI);
+      twitData.data.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
       });
-      days = Array.from(days).reverse();
+      console.log(twitData.data);
 
-      let coinData = await (await axios.get(geckoURI)).data.data;
-      console.log(coinData);
-      coinData.map((day) => {
-        console.log(new Date(day.date).ge);
-      });
+      let coinData = await axios.get(geckoURI);
+      console.log(coinData.data);
 
-      days.forEach((d) => {
-        let score = 0;
-        twitData.data.comms.map((c) => {
-          const date =
-            new Date(c.ca).getUTCDate() + '/' + (new Date(c.ca).getMonth() + 1);
-          if (date == d) {
-            score += c.rep + c.like + c.ret;
-          }
+      let chartData = [];
+
+      twitData.data.map((td) => {
+        let open = coinData.data.data[chartData.length].open;
+        let close = coinData.data.data[chartData.length].close;
+        if (close == 'N/A') {
+          close = coinData.data.data[chartData.length].curPrice;
+        }
+        chartData.push({
+          name: '', //tddate
+          tw: td.totLikes + td.totRet + td.totUsersF,
+          op: parseFloat(open.trim().substring(1, close.length)),
+          cl: parseFloat(close.trim().substring(1, close.length)),
         });
-        setTData((prev) => {
-          return [...prev, { name: d, uv: score, pv: '30' }];
-        });
+        if (chartData.length == 7) {
+          setTData(chartData.reverse());
+          console.log(chartData);
+        }
       });
     })();
   }, []);
@@ -49,22 +49,30 @@ const CoinContainer = (props) => {
         ${props.tag} <img src={props.img}></img> {props.id.toUpperCase()} +
         {props.precentage}
       </h3>
-      <LineChart width={400} height={100} data={tData}>
+      <LineChart width={400} height={200} data={tData}>
         <XAxis dataKey="name"></XAxis>
         <YAxis></YAxis>
+        {/* <Line
+          dot={false}
+          type="natural"
+          dataKey="tw"
+          stroke="#ffffff"
+          strokeWidth={1}
+        ></Line> */}
         <Line
           dot={false}
           type="natural"
-          dataKey="uv"
-          stroke="#ffffff"
+          dataKey="op"
+          stroke="#F44336"
           strokeWidth={1}
         ></Line>
-        {/* <Line
-          type="monotone"
-          dataKey="pv"
-          stroke="#1927e6"
-          strokeWidth={3}
-        ></Line> */}
+        <Line
+          dot={false}
+          type="natural"
+          dataKey="cl"
+          stroke="#8ED1FC"
+          strokeWidth={1}
+        ></Line>
       </LineChart>
     </div>
   );

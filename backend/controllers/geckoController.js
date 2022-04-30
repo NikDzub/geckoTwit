@@ -89,7 +89,8 @@ const getCoin = asyncHandler(async (req, res) => {
         tr
           .slice(tr.indexOf(`text-center">`), tr.indexOf('</th>'))
           .replace(`text-center">`, '')
-      );
+      ).toISOString();
+      date = date.substring(0, date.indexOf('T'));
 
       let mCap = tr.split(`class="text-center">`)[1].split(`</td>`)[0];
       tr = tr.replace(`class="text-center">`, '');
