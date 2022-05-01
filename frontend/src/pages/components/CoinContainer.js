@@ -16,7 +16,7 @@ const CoinContainer = (props) => {
   useEffect(() => {
     (async () => {
       if (cookies.tData) {
-        setTData(cookies.tData);
+        console.log('cookies exist');
       } else {
         let twitData = await axios.get(twitURI);
         twitData.data.sort((a, b) => {
@@ -44,11 +44,7 @@ const CoinContainer = (props) => {
           });
           if (chartData.length == 7) {
             setTData(chartData.reverse());
-            //console.log(chartData);
-            removeCookie('tData');
-            let d = new Date();
-            d.setTime(d.getTime() + 1 * 60 * 1000);
-            setCookie('tData', chartData, { expires: d });
+            console.log(chartData);
           }
         });
       }
@@ -57,39 +53,51 @@ const CoinContainer = (props) => {
 
   return (
     <div className="coinContainer">
-      <h3>
-        ${props.tag} <img src={props.img}></img> {props.id.toUpperCase()} +
-        {props.precentage}
-      </h3>
-      <LineChart width={400} height={200} data={tData}>
-        <XAxis dataKey="name"></XAxis>
-        <YAxis yAxisId="left"></YAxis>
-        <YAxis yAxisId="right" orientation="right"></YAxis>
-        <Line
-          yAxisId="right"
-          dot={false}
-          type="natural"
-          dataKey="tw"
-          stroke="#ffffff"
-          strokeWidth={1}
-        ></Line>
-        <Line
-          yAxisId="left"
-          dot={false}
-          type="natural"
-          dataKey="op"
-          stroke="#F44336"
-          strokeWidth={1}
-        ></Line>
-        <Line
-          yAxisId="left"
-          dot={false}
-          type="natural"
-          dataKey="cl"
-          stroke="#8ED1FC"
-          strokeWidth={1}
-        ></Line>
-      </LineChart>
+      <div className="coinChart">
+        <LineChart width={500} height={300} data={tData}>
+          <XAxis dataKey="name"></XAxis>
+          <YAxis yAxisId="left"></YAxis>
+          <YAxis yAxisId="right" orientation="right"></YAxis>
+          <Line
+            yAxisId="right"
+            dot={false}
+            type="natural"
+            dataKey="tw"
+            stroke="#FBC02D"
+            strokeWidth={1}
+          ></Line>
+          <Line
+            yAxisId="left"
+            dot={false}
+            type="natural"
+            dataKey="op"
+            stroke="#8ED1FC"
+            strokeWidth={1}
+          ></Line>
+          <Line
+            yAxisId="left"
+            dot={false}
+            type="natural"
+            dataKey="cl"
+            stroke="#F44336"
+            strokeWidth={1}
+          ></Line>
+        </LineChart>
+      </div>
+      <div className="coinInfo">
+        <div className="coinImg">
+          ${props.tag} <img src={props.img}></img>
+        </div>
+        <p className="coinDesc">
+          {props.id.toUpperCase().replaceAll('-', ' ')}
+        </p>
+        <p className="precentage">+{props.precentage}</p>
+        <div className="lines">
+          <span className="op">Open</span>
+          <span className="cl">Close</span>
+          <span className="tw">Social</span>
+        </div>
+      </div>
     </div>
   );
 };

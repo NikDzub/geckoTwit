@@ -4,10 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 export const Header = () => {
   return (
     <header className="header">
-      <div>
+      <div className="logo">geckTwit</div>
+      <div className="headLinks">
         <Link to={'/'}>HOME</Link>
-      </div>
-      <div>
         <Link to={'/search'}>SEARCH</Link>
       </div>
     </header>
