@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useCookies } from 'react-cookie';
+import cookie from 'react-cookies';
 
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis } from 'recharts';
 
@@ -11,12 +11,10 @@ const CoinContainer = (props) => {
   const twitURI = `http://localhost:5000/api/twitter/${props.tag}`;
   const geckoURI = `http://localhost:5000/api/gecko/${props.id}`;
 
-  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
-
   useEffect(() => {
     (async () => {
-      if (cookies.tData) {
-        console.log('cookies exist');
+      if (props.dataCookie !== false) {
+        setTData(props.dataCookie);
       } else {
         let twitData = await axios.get(twitURI);
         twitData.data.sort((a, b) => {
@@ -44,7 +42,10 @@ const CoinContainer = (props) => {
           });
           if (chartData.length == 7) {
             setTData(chartData.reverse());
-            console.log(chartData);
+            const d = JSON.stringify(chartData);
+            cookie.save(`${props.tag}`, d, {
+              maxAge: 360,
+            });
           }
         });
       }
@@ -53,44 +54,56 @@ const CoinContainer = (props) => {
 
   return (
     <div className="coinContainer">
-      <div className="coinChart">
-        <LineChart width={500} height={300} data={tData}>
-          <XAxis dataKey="name"></XAxis>
-          <YAxis yAxisId="left"></YAxis>
-          <YAxis yAxisId="right" orientation="right"></YAxis>
-          <Line
-            yAxisId="right"
-            dot={false}
-            type="natural"
-            dataKey="tw"
-            stroke="#FBC02D"
-            strokeWidth={1}
-          ></Line>
-          <Line
-            yAxisId="left"
-            dot={false}
-            type="natural"
-            dataKey="op"
-            stroke="#8ED1FC"
-            strokeWidth={1}
-          ></Line>
-          <Line
-            yAxisId="left"
-            dot={false}
-            type="natural"
-            dataKey="cl"
-            stroke="#F44336"
-            strokeWidth={1}
-          ></Line>
-        </LineChart>
-      </div>
+      {tData.length == 0 ? (
+        <div className="notAvailable">
+          <p>Not available right now, or whatever</p>
+        </div>
+      ) : (
+        <div className="coinChart">
+          <LineChart data={tData} height={300} width={500}>
+            <XAxis dataKey="name"></XAxis>
+            <YAxis yAxisId="left"></YAxis>
+            <YAxis yAxisId="right" orientation="right"></YAxis>
+            <Line
+              className="blurLine"
+              yAxisId="right"
+              dot={false}
+              type="basis"
+              dataKey="tw"
+              stroke="#FFB600"
+              strokeWidth={1}
+            ></Line>
+            <Line
+              yAxisId="left"
+              dot={false}
+              type="basis"
+              dataKey="op"
+              stroke="#8ED1FC"
+              strokeWidth={1}
+            ></Line>
+            <Line
+              yAxisId="left"
+              dot={false}
+              type="basis"
+              dataKey="cl"
+              stroke="#F44336"
+              strokeWidth={1}
+            ></Line>
+          </LineChart>
+        </div>
+      )}
+
       <div className="coinInfo">
         <div className="coinImg">
-          ${props.tag} <img src={props.img}></img>
+          <img src={props.img}></img>
         </div>
-        <p className="coinDesc">
+        <p className="coinTag">{props.tag}</p>
+        <a
+          className="coinDesc"
+          href={`https://www.coingecko.com/en/coins/${props.id}`}
+        >
           {props.id.toUpperCase().replaceAll('-', ' ')}
-        </p>
+        </a>
         <p className="precentage">+{props.precentage}</p>
         <div className="lines">
           <span className="op">Open</span>
