@@ -1,13 +1,14 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export const Header = () => {
   return (
     <header className="header">
       <div className="logo">geckTwit</div>
       <div className="headLinks">
-        <Link to={'/'}>HOME</Link>
-        <Link to={'/search'}>SEARCH</Link>
+        <Link to={useLocation().pathname == '/' ? 'about' : ''}>
+          {useLocation().pathname == '/' ? 'ABOUT' : 'HOME'}
+        </Link>
       </div>
     </header>
   );

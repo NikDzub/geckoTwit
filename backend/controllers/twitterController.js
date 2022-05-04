@@ -22,11 +22,11 @@ const getTweets = asyncHandler(async (req, res) => {
     const until = past7Days[past7Days.indexOf(d) - 1];
     const since = d;
     let params = {
-      q: `${req.params.id} "$${req.params.id}" (${req.params.id}) -RSI -top -popular -recent -trending -movers min_replies:2 min_faves:2 min_retweets:2 until:${until} since:${since} -filter:replies`,
+      q: `${req.params.id} "$${req.params.id}" (${req.params.id}) -RSI -top -popular -recent -trending -movers min_replies:0 min_faves:0 min_retweets:0 until:${until} since:${since} -filter:replies`,
     };
     if (until == undefined) {
       params = {
-        q: `${req.params.id} "$${req.params.id}" (${req.params.id}) -RSI -top -popular -recent -trending -movers min_replies:2 min_faves:2 min_retweets:2 since:${since} -filter:replies`,
+        q: `${req.params.id} "$${req.params.id}" (${req.params.id}) -RSI -top -popular -recent -trending -movers min_replies:0 min_faves:0 min_retweets:0 since:${since} -filter:replies`,
       };
     }
     client.get('search/tweets', params, function (error, tweets, response) {

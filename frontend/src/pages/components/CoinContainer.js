@@ -26,6 +26,7 @@ const CoinContainer = (props) => {
         let chartData = [];
 
         twitData.data.map((td) => {
+          console.log(td);
           let open = coinData.data.data[chartData.length].open;
           let close = coinData.data.data[chartData.length].close;
           if (close == 'N/A') {
@@ -36,15 +37,15 @@ const CoinContainer = (props) => {
           });
           chartData.push({
             name: td.date, //tddate
-            tw: td.totLikes + td.totRet + td.totUsersF,
-            op: parseFloat(open.trim().substring(1, close.length)),
-            cl: parseFloat(close.trim().substring(1, close.length)),
+            tw: (td.totLikes + td.totRet + td.totUsersF) / 3,
+            op: parseFloat(open.replace('$', '').replace(',', '')),
+            cl: parseFloat(close.replace('$', '').replace(',', '')),
           });
           if (chartData.length == 7) {
             setTData(chartData.reverse());
             const d = JSON.stringify(chartData);
             cookie.save(`${props.tag}`, d, {
-              maxAge: 360,
+              maxAge: 33360,
             });
           }
         });
@@ -56,21 +57,30 @@ const CoinContainer = (props) => {
     <div className="coinContainer">
       {tData.length == 0 ? (
         <div className="notAvailable">
-          <p>Not available right now, or whatever</p>
+          <p>Not available right now, try later.</p>
         </div>
       ) : (
         <div className="coinChart">
-          <LineChart data={tData} height={300} width={500}>
+          <LineChart data={tData} height={200} width={300}>
             <XAxis dataKey="name"></XAxis>
-            <YAxis yAxisId="left"></YAxis>
-            <YAxis yAxisId="right" orientation="right"></YAxis>
+            <YAxis
+              type="number"
+              domain={['auto', 'auto']}
+              yAxisId="left"
+            ></YAxis>
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              type="number"
+              domain={['auto', 'auto']}
+            ></YAxis>
             <Line
               className="blurLine"
               yAxisId="right"
               dot={false}
               type="basis"
               dataKey="tw"
-              stroke="#FFB600"
+              stroke="#FFDE00"
               strokeWidth={1}
             ></Line>
             <Line
@@ -78,7 +88,7 @@ const CoinContainer = (props) => {
               dot={false}
               type="basis"
               dataKey="op"
-              stroke="#8ED1FC"
+              stroke="#329664"
               strokeWidth={1}
             ></Line>
             <Line
@@ -86,7 +96,7 @@ const CoinContainer = (props) => {
               dot={false}
               type="basis"
               dataKey="cl"
-              stroke="#F44336"
+              stroke="#55FFAA"
               strokeWidth={1}
             ></Line>
           </LineChart>
@@ -94,22 +104,16 @@ const CoinContainer = (props) => {
       )}
 
       <div className="coinInfo">
-        <div className="coinImg">
-          <img src={props.img}></img>
-        </div>
         <p className="coinTag">{props.tag}</p>
         <a
           className="coinDesc"
+          target={'_blank'}
           href={`https://www.coingecko.com/en/coins/${props.id}`}
         >
+          <img src={props.img}></img>
           {props.id.toUpperCase().replaceAll('-', ' ')}
         </a>
         <p className="precentage">+{props.precentage}</p>
-        <div className="lines">
-          <span className="op">Open</span>
-          <span className="cl">Close</span>
-          <span className="tw">Social</span>
-        </div>
       </div>
     </div>
   );

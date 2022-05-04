@@ -119,7 +119,6 @@ const getCoin = asyncHandler(async (req, res) => {
       while (close.includes(`\n`)) {
         close = close.replace(`\n`, '');
       }
-
       return { id: req.params.id, curPrice, date, mCap, vol, open, close };
     });
     res.status(200).json({ data: coinHtml });

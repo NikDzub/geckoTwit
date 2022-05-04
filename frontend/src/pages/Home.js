@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import cookie from 'react-cookies';
 
@@ -11,22 +12,22 @@ export const Home = () => {
   const geckoURI = 'http://localhost:5000/api/gecko/';
 
   useEffect(() => {
-    (async () => {
+    const getData = async () => {
       let popData = await axios.get(geckoURI);
-      popData = popData.data.slice(0, 3);
-      setCoinData(popData);
-    })();
+      console.log('get');
+      setCoinData(popData.data.slice(0, 10));
+    };
+    getData();
+    const live = setInterval(getData, 50000);
   }, []);
 
   return (
     <div className="home">
-      {coinData.length == 3
+      {coinData.length == 10
         ? coinData.map((c) => {
             let dataCookie = false;
             if (cookie.load(`${c.tag}`)) {
               const b = cookie.load(`${c.tag}`);
-              console.log(b);
-              console.log('b');
               dataCookie = b;
             }
             return (
@@ -40,7 +41,12 @@ export const Home = () => {
               ></CoinContainer>
             );
           })
-        : 'no data yet'}
+        : ''}
+      <div className="lines">
+        <p className="line o">open</p>
+        <p className="line c">close</p>
+        <p className="line s">social</p>
+      </div>
     </div>
   );
 };

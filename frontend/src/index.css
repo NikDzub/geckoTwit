@@ -8,17 +8,25 @@ body {
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: black;
+  background-color: rgb(22, 22, 22);
 }
+
 .container {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   filter: blur(0px);
 }
 .header {
+  margin-bottom: 30px;
+  width: 700px;
   font-size: 1.5rem;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: black;
+  background-color: rgb(22, 22, 22);
   border-bottom: 1px solid gray;
   color: whitesmoke;
   padding: 5px;
@@ -42,31 +50,33 @@ body {
 .headLinks a {
   margin: 10px;
 }
+.home {
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
 .coinContainer {
-  width: 700px;
+  width: 50%;
   border-radius: 5px;
-  padding: 10px;
-  margin: 10px;
   color: whitesmoke;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  background-color: rgb(37, 37, 37);
-  border: 1px solid gray;
+  border: 0px solid gray;
 }
 .coinChart {
-  margin: 10px;
-  padding: 5px;
+  margin: 0px 0px 0px 0px;
+  padding: 0px;
 }
 .coinInfo {
+  width: 100%;
   font-size: 1.3rem;
-  padding: 10px;
   border-radius: 5px;
-  border: 1px solid gray;
+  border: 0px solid gray;
   text-align: center;
-  width: 200px;
-  background-color: black;
   color: whitesmoke;
 }
 
@@ -80,6 +90,7 @@ body {
   text-align: center;
 }
 .coinImg img {
+  margin: 5px;
   border-radius: 50%;
   width: 2.5rem;
 }
@@ -87,60 +98,75 @@ body {
   font-size: 0.8rem;
 }
 .coinDesc {
+  padding: 5px;
   border: 1px solid gray;
   border-radius: 5px;
-  margin: 10px;
-  padding: 5px;
-  background-color: rgb(37, 37, 37);
+  background-color: rgb(74, 74, 74);
   text-decoration: none;
   color: whitesmoke;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.8rem;
   text-align: center;
 }
 .coinDesc:hover {
   background-color: whitesmoke;
   color: black;
 }
+.coinDesc img {
+  border-radius: 50%;
+  margin: 5px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.191);
+}
 .precentage {
-  border: 1px solid gray;
+  width: 100%;
+  border: 1px solid rgb(53, 53, 53);
   border-radius: 5px;
   font-weight: 500;
   background-color: rgb(37, 37, 37);
   color: whitesmoke;
 }
 .recharts-text {
-  font-size: 0.7rem;
-  color: aqua;
+  font-size: 0.6rem;
 }
-.lines {
-  font-weight: 500;
-  font-size: 0.7rem;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-}
+
 .blurLine {
   filter: blur(0px);
 }
-.op {
-  margin: 2px;
-  color: #8ed1fc;
+.lines {
+  font-size: 0.7rem;
+  color: whitesmoke;
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
 }
-.cl {
-  margin: 2px;
-  color: #f44336;
+.line {
+  padding: 5px;
+  margin: 5px;
 }
-.tw {
-  margin: 2px;
-  color: #fbc02d;
+.o {
+  color: #329664;
+}
+.c {
+  color: #55ffaa;
+}
+.s {
+  color: #ffde00;
 }
 .notAvailable {
-  padding: 5px;
-  background-color: #f44336;
+  text-align: center;
+  width: 400px;
+  padding: 10px;
+  margin: 10px;
+  padding: 15px;
+}
+.about {
+  color: whitesmoke;
+}
+.about a {
+  color: whitesmoke;
 }
