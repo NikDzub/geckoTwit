@@ -45,7 +45,7 @@ const CoinContainer = (props) => {
             setTData(chartData.reverse());
             const d = JSON.stringify(chartData);
             cookie.save(`${props.tag}`, d, {
-              maxAge: 33360,
+              maxAge: 360,
             });
           }
         });
